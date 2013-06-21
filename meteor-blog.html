@@ -1,0 +1,99 @@
+<head>
+  <title>meteor-blog</title>
+</head>
+
+<body>
+	{{> navbar}}
+	{{> main}}
+</body>
+
+
+
+<!-- Main Template -->
+<template name="main">
+	<div class="container-fluid">
+		{{> blog}}
+	</div>
+</template>
+
+
+<!-- Navbar Template -->
+<template name="navbar">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="/">Meteor Blog</a>
+				<div class="navbar-content">
+					<ul class="nav pull-right">
+						<li><a href="#">Login</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<!-- Blog Template -->
+<template name="blog">
+	<div class="row-fluid">
+		<div class="span2 well well-small">
+			<ul class="nav nav-list">
+				<li class="nav-header">Tags</li>
+				{{#each tags}}
+				<li><a href="/tags/{{slug}}">{{title}}</a></li>
+				{{/each}}
+			</ul>
+		</div>
+		<div class="span10">
+			<ol class="breadcrumb">
+				<li>
+					<a href="/">Home</a>
+					<span class="divider">/</span> 
+				</li>
+				<li class="active">Recent Posts</li>
+			</ol>
+			{{#each posts}}	
+				{{> post}}
+			{{/each}}
+		</div>
+	</div>
+</template>
+
+<!-- Post Template -->
+<template name="post">
+	<div class="media">
+		<a class="pull-left" href="/posts/{{_id}}">
+			<img class="media-object" src="{{image}}">
+		</a>
+		<div class="media-body">
+			<h4 class="media-heading">{{title}}</h4>
+			<p>
+				{{body}}
+				<br/>
+				{{#if tags}}
+					{{#each tags}}
+					<span class="label label-info">{{this}}</span>
+					{{/each}}
+				{{/if}}
+			</p>
+		</div>
+	</div>
+</template>
+
+
+<!-- Post Detail Template -->
+<template name="detail">
+	<h2>{{title}}</h2>
+	<p>{{body}}</p>
+</template>
+
+
+
+<template name="hello">
+  <h1>Hello World!</h1>
+  {{greeting}}
+  <input type="button" value="Click" />
+</template>
+
+
+

@@ -32,17 +32,16 @@ initClient = () ->
 	#Inject posts to the blog template, this calls the fetch function on the Posts collection.
 	Template.blog.posts = () ->
 		posts = Posts.find().fetch()
-		console.log(posts)
 		return posts
 		
 	Template.blog.post = (id) ->
-		post = Posts.findOne({_id: id}) if id
-		console.log(post)
+		post = Posts.find({_id: id}).fetch() if id
 		return post
 
 	#Inject tags into the menu template, this calls the fetch function on the Tags collection.
 	Template.blog.tags = () ->
-		return Tags.find().fetch()
+		tags = Tags.find().fetch()
+		return tags
 		
 	#Attach event listeners to the elements inside of the template and handle accordingly.
 	Template.blog.events({

@@ -48,7 +48,7 @@
 			<ul class="nav nav-list">
 				<li class="nav-header">Tags</li>
 				{{#each tags}}
-				<li><a href="/tags/{{slug}}">{{title}}</a></li>
+				<li><a href="/#/tags/{{slug}}">{{title}}</a></li>
 				{{/each}}
 			</ul>
 		</div>
@@ -60,17 +60,19 @@
 				</li>
 				<li class="active">Recent Posts</li>
 			</ol>
-			{{#each posts}}	
-				{{> post}}
-			{{/each}}
+			{{#if posts}}
+				{{#each posts}}	
+					{{> post}}
+				{{/each}}
+			{{/if}}
 		</div>
 	</div>
 </template>
 
 <!-- Post Template -->
 <template name="post">
-	<div class="media">
-		<a class="pull-left" href="/posts/{{_id}}">
+	<div class="media" id="post-{{_id}}">
+		<a class="pull-left" href="/#/posts/{{_id}}">
 			<img class="media-object" src="{{image}}">
 		</a>
 		<div class="media-body">

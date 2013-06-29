@@ -1,11 +1,6 @@
-### 
-Init the app
-###
-
-
-###
-Init the client
-###
+#///////////////////////////
+# Client
+#///////////////////////////
 initClient = () ->	
 	#Models
 	Tags = new Meteor.Collection('tags')
@@ -32,6 +27,8 @@ initClient = () ->
 	#Meteor.subscribe('tags')
 	#Meteor.subscribe('posts')
 	
+	# Views
+	
 	#Inject posts to the blog template, this calls the fetch function on the Posts collection.
 	Template.blog.posts = () ->
 		posts = Posts.find().fetch()
@@ -45,13 +42,10 @@ initClient = () ->
 	Template.blog.tags = () ->
 		tags = Tags.find().fetch()
 		return tags
-		
 	
-	#Inject breadcrumbs template data
-	Template.blog.breadcrumbs = () ->
-		return currentView = 'Posts'	
+			
+	# Controllers
 	
-		
 	#Attach event listeners to the elements inside of the template and handle accordingly.
 	Template.post.events({
 
@@ -71,15 +65,16 @@ initClient = () ->
 			$('#edit').html(editView).toggleClass('hidden')
 	})
 	
-	
-	
+	#Start the application
 	new Router()
 	Backbone.history.start({pushState: true})
 
+	
 
-###
-Init the database with data
-###
+#///////////////////////////
+# Server
+#///////////////////////////
+#Init the database with data
 initDatabase = () ->
 	Posts.insert({
 		title: 'Hello ' + new Date()
@@ -92,16 +87,12 @@ initDatabase = () ->
 	Tags.insert({id: 2, title: 'Featured', slug: 'featured'})
 	Tags.insert({id: 3, title: 'Events', slug: 'events'})
 	
-
-
-###
-Init the server
-###
 initServer = () ->
 	#Models
 	Posts = new Meteor.Collection('posts')
 	Tags = new Meteor.Collection('tags')	
-	#Kick off the application
+
+	#Start the application
 	Meteor.startup(() ->
 		console.log('meteor-blog:startup()', Posts)
 	)

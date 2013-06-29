@@ -15,15 +15,18 @@ initClient = () ->
 	Router = Backbone.Router.extend({
 		routes: 
 			"help" : "help"
-			"posts" : "posts"
+			"/" : "posts"
 			"posts/:id" : "detail"
+			"tags/:tag" : "tag"
 		help: () ->
-			console.log('help')
+			console.log('Render help view')
 		posts: () ->
-			console.log('posts')
+			console.log('Render posts view')
 		detail: (id) ->
 			Template.blog.post(id) if id
-			console.log(id) if id
+			console.log(id, 'Render post detail view') if id
+		tag: (tag) ->
+			console.log(tag, 'Render tags view')
 	})
 	
 	#Meteor.subscribe('tags')
@@ -43,11 +46,32 @@ initClient = () ->
 		tags = Tags.find().fetch()
 		return tags
 		
+	
+	#Inject breadcrumbs template data
+	Template.blog.breadcrumbs = () ->
+		return currentView = 'Posts'	
+	
+		
 	#Attach event listeners to the elements inside of the template and handle accordingly.
-	Template.blog.events({
-		'click input' : () ->
-			console.log('You clicked the button')
+	Template.post.events({
+
+		#Handle removing a post
+		'click #deleteBtn' : () ->
+			c = confirm('Are you sure you want to delete this?')
+			Posts.remove(this._id) if c
+			console.log('Delete this post', this)
+
+		#Handle editing a post
+		'click #editBtn' : () ->
+			console.log('Edit this post', this)
+			#Render edit view
+			editView = Meteor.render(() ->
+				return "Edit view #{@title}"
+			)
+			$('#edit').html(editView).toggleClass('hidden')
 	})
+	
+	
 	
 	new Router()
 	Backbone.history.start({pushState: true})

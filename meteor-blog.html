@@ -1,5 +1,6 @@
 <head>
   <title>meteor-blog</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min.js"></script>
 </head>
 
 <body>
@@ -10,14 +11,12 @@
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	  ga('create', 'UA-41940619-1', 'meteor.com');
+	  ga('create', 'UA-41940619-1', 'meteor-blog.meteor.com');
 	  ga('send', 'pageview');
 	</script>
 </body>
 
-
-
-<!-- Main Template -->
+<!-- @TODO: [Main View] -->
 <template name="main">
 	<div class="container-fluid">
 		{{> blog}}
@@ -25,7 +24,7 @@
 </template>
 
 
-<!-- Navbar Template -->
+<!-- @TODO: [Navbar View] -->
 <template name="navbar">
 	<div class="navbar navbar-fixed-top navbar-inverse">
 		<div class="navbar-inner">
@@ -41,37 +40,57 @@
 	</div>
 </template>
 
-<!-- Blog Template -->
+
+<!-- @TODO: [Post View] -->
 <template name="blog">
 	<div class="row-fluid">
-		<div class="span2 well well-small">
-			<ul class="nav nav-list">
-				<li class="nav-header">Tags</li>
-				{{#each tags}}
-				<li><a href="/#/tags/{{slug}}">{{title}}</a></li>
-				{{/each}}
-			</ul>
+		<div class="span9 views">
+			{{> breadcrumbs}}
+			<section id="index" class="visible">
+				{{#if posts}}
+					{{#each posts}}	
+						{{> post}}
+					{{/each}}
+				{{/if}}				
+			</section>
+			<section id="detail" class="hidden">
+				
+			</section>
+			<section id="edit" class="hidden">
+				
+			</section>
 		</div>
-		<div class="span10">
-			<ol class="breadcrumb">
-				<li>
-					<a href="/">Home</a>
-					<span class="divider">/</span> 
-				</li>
-				<li class="active">Recent Posts</li>
-			</ol>
-			{{#if posts}}
-				{{#each posts}}	
-					{{> post}}
-				{{/each}}
-			{{/if}}
-		</div>
+
+		<div class="span3">
+		<ul class="nav nav-list well well-small">
+			<li class="nav-header">Tags</li>
+			{{#each tags}}
+			<li><a href="/#/tags/{{slug}}">{{title}}</a></li>
+			{{/each}}
+		</ul>
+	</div>
 	</div>
 </template>
 
-<!-- Post Template -->
+
+<!-- @TODO: [Breadcrumb View] -->
+<template name="breadcrumbs">
+	<ol class="breadcrumb">
+		<li>
+			<a href="/">Home</a>
+			<span class="divider">/</span> 
+		</li>
+		<li class="active">{{currentView}}</li>
+	</ol>
+</template>
+
+<!-- @TODO: [Post Item View] -->
 <template name="post">
 	<div class="media" id="post-{{_id}}">
+		<div class="actions btn-group pull-right">
+			<button id="editBtn" class="btn btn- btn-mini"><i class="icon-edit"></i></button>
+			<button id="deleteBtn" class="btn btn- btn-mini"><i class="icon-remove"></i></button>
+		</div>
 		<a class="pull-left" href="/#/posts/{{_id}}">
 			<img class="media-object" src="{{image}}">
 		</a>
@@ -80,30 +99,54 @@
 			<p>
 				{{body}}
 				<br/>
-				{{#if tags}}
-					{{#each tags}}
-					<span class="label label-info">{{this}}</span>
-					{{/each}}
-				{{/if}}
+				<small>
+					{{#if tags}}
+						{{#each tags}}
+						<a href="/#/tags/{{this}}">
+							<span class="label label-info">{{this}}</span>
+						</a>
+						{{/each}}
+					{{/if}}
+				</small>
 			</p>
 		</div>
 	</div>
 </template>
 
 
-<!-- Post Detail Template -->
+<!-- @TODO: [Post Detail View] -->
 <template name="detail">
 	<h2>{{title}}</h2>
 	<p>{{body}}</p>
 </template>
 
 
-
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<!-- @TODO: [Post Edit View] -->
+<template name="edit">
+	<form id="postForm" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="title">Title:</label>
+			<div class="controls">
+				<input class="input-xlarge focused" id="title" name="title" type="text" value="{{title}}"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="title">Image:</label>
+			<div class="controls">
+				<input class="input-xlarge focused" id="image" name="image" type="text" value="{{image}}"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="body">Body:</label>
+			<div class="controls">
+				<textarea id="body" class="input-xlarge" name="body" rows="8" cols="40">{{body}}</textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="published">Published:</label>
+			<div class="controls">
+				<input class="input-xlarge focused" id="published" name="published" type="checkbox" value="{{published}}"/>
+			</div>
+		</div>
+	</form>
 </template>
-
-
-

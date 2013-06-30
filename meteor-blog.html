@@ -1,11 +1,26 @@
 <head>
   <title>meteor-blog</title>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min.js"></script>
 </head>
 
 <body>
-	{{> navbar}}
-	{{> main}}
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" href="/">Meteor Blog</a>
+				<div class="navbar-content">
+					<ul class="nav pull-right">
+						<li>
+							<a class="" data-toggle="modal" href="#addBtnModal" >Add Post</a>
+
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		{{> blog}}
+	</div>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -16,32 +31,9 @@
 	</script>
 </body>
 
-<!-- @TODO: [Main View] -->
-<template name="main">
-	<div class="container-fluid">
-		{{> blog}}
-	</div>
-</template>
 
 
-<!-- @TODO: [Navbar View] -->
-<template name="navbar">
-	<div class="navbar navbar-fixed-top navbar-inverse">
-		<div class="navbar-inner">
-			<div class="container-fluid">
-				<a class="brand" href="/">Meteor Blog</a>
-				<div class="navbar-content">
-					<ul class="nav pull-right">
-						<li><a href="#">Login</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
-
-
-<!-- @TODO: [Post View] -->
+<!-- @TODO: [Blog View] -->
 <template name="blog">
 	<div class="row-fluid">
 		<div class="span9 views">
@@ -60,7 +52,6 @@
 				
 			</section>
 		</div>
-
 		<div class="span3">
 		<ul class="nav nav-list well well-small">
 			<li class="nav-header">Tags</li>
@@ -69,6 +60,51 @@
 			{{/each}}
 		</ul>
 	</div>
+	</div>
+	<div class="modal fade hide" id="addBtnModal">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal">×</button>
+	    <h3>Add Post</h3>
+	  </div>
+	  <div class="modal-body">
+	   	<form id="postForm" class="form-horizonta">
+		          <div class="control-group">
+		            <label class="control-label">Title:</label>
+		            <div class="controls">
+		              <input type="text" class="input-block-level input-medium" placeholder="Enter title here"
+		              id="postTitle"> 
+		            </div>
+		          </div>
+		          <div class="control-group">
+		            <label class="control-label">Body:</label>
+		            <div class="controls">
+		              <textarea class="input-block-level" rows="4" placeholder="Enter contents here"
+		              id="postBody"></textarea>
+		            </div>
+		          </div>
+		          <div class="control-group">
+		            <label class="control-label">Image:</label>
+		            <div class="controls">
+		              <input type="url" class="input-block-level input-medium" placeholder="http://placehold.it/100x100&amp;text=FeatureImage"
+		              id="postImage"> 
+		            </div>
+		          </div>
+		          <div class="control-group">
+		            <label class="control-label">Tags:</label>
+		            <div class="controls">
+		              <select multiple="multiple" id="postTags" class="input-block-level">
+		                <option>Option 1</option>
+		                <option>Option 2</option>
+		                <option>Option 3</option>
+		              </select>
+		            </div>
+		          </div>		           
+		        </form>
+	  </div>
+	  <div class="modal-footer">
+	    <a href="#" class="btn" data-dismiss="modal">Close</a>
+	    <button id="addBtn" class="btn btn-primary">Save</button>
+	  </div>
 	</div>
 </template>
 
@@ -87,9 +123,9 @@
 <!-- @TODO: [Post Item View] -->
 <template name="post">
 	<div class="media" id="post-{{_id}}">
-		<div class="actions btn-group pull-right">
-			<button id="editBtn" class="btn btn- btn-mini"><i class="icon-edit"></i></button>
-			<button id="deleteBtn" class="btn btn- btn-mini"><i class="icon-remove"></i></button>
+		<div class="actions pull-right">
+			<button id="editBtn" class="btn hidden btn-mini"><i class="icon-edit"></i></button>
+			<button id="deleteBtn" class="btn btn-danger btn-mini"><i class="icon-remove"></i></button>
 		</div>
 		<a class="pull-left" href="/#/posts/{{_id}}">
 			<img class="media-object" src="{{image}}">

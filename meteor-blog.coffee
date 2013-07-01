@@ -51,21 +51,32 @@ Client = () ->
 	
 			
 	# Controllers
+	
+	#Blog Events - Attach event listeners to the elements inside of the template and handle accordingly.
 	Template.blog.events({
+
 		#Handle adding a post
 		'click #addBtn' : () ->
-			post  = {
-				title: $('#postTitle').val(),
-				body: $('#postBody').val(),
-				image: $('#postImage').val(),
+			post  = 
+				title: $('#postTitle').val()
+				body: $('#postBody').val()
+				image: $('#postImage').val()
 				tags: ['New']
-			}
-			console.log('Insert post', post)
 			$('#addBtnModal').modal('toggle')
 			Posts.insert(post)
+			console.log('Insert post', post)
+			
+			'click #addTagBtn' : () ->
+				el = $('#postTagsInput')
+				tag = 
+					slug: el.val().toLowerCase()
+					title: el.val()
+				el.val('')
+				Tags.insert(tag);
+				console.log('Insert tag', tag)
 	})
 	
-	#Attach event listeners to the elements inside of the template and handle accordingly.
+	#Post Events - Attach event listeners to the elements inside of the template and handle accordingly.
 	Template.post.events({
 		
 		#Handle removing a post
@@ -83,38 +94,40 @@ Client = () ->
 			$('#edit').html(editView).toggleClass('hidden')
 	})
 	
+	
+	
+	
 	#Start the application
-	new Router()
-	Backbone.history.start({pushState: true})
+#	new Router()
+#	Backbone.history.start({pushState: true})
 
 	
 
 #///////////////////////////
 # Server
-#///////////////////////////
-#Init the database with data
-Database = () ->
-	Posts.insert({
-		title: 'Hello ' + new Date()
-		body: 'This is an example post created at app startup.'
-		image: 'http://placehold.it/64x64'
-		published: true
-		tags: ['News', 'Events']
-	})
-	Tags.insert({id: 1, title: 'News', slug: 'news'})
-	Tags.insert({id: 2, title: 'Featured', slug: 'featured'})
-	Tags.insert({id: 3, title: 'Events', slug: 'events'})
-	
+#///////////////////////////	
 Server = () ->
 	#Models
 	Posts = new Meteor.Collection('posts')
 	Tags = new Meteor.Collection('tags')	
-
-	#Start the application
-	Meteor.startup(() ->
-		console.log('meteor-blog:startup()', Posts)
-	)
 	
+	#Start the application on server startup, if the database is empty, create some initial data.
+	Meteor.startup(() ->
+		if Posts.find().count() is 0
+			Posts.insert({
+				title: 'Hello ' + new Date()
+				body: 'In this article we will talk about using Yeoman, which is a client-side stack using three tools and frameworks to help developers quickly build beautiful and scalable web applications, these tools include support for linting, testing, minification and more.'
+				image: 'https://dl.dropboxusercontent.com/u/26906414/cdn/img/yeoman-logo.png'
+				published: true
+				tags: ['News', 'Events']
+			})
+		if Tags.find().count() is 0
+			Tags.insert({id: 1, title: 'News', slug: 'news'})
+			Tags.insert({id: 2, title: 'Featured', slug: 'featured'})
+			Tags.insert({id: 3, title: 'Events', slug: 'events'})
+		
+		console.log('meteor-blog:startup()', this)
+	)	
 	
 Client() if Meteor.isClient
 Server() if Meteor.isServer

@@ -11,8 +11,8 @@
 					<ul class="nav pull-right">
 						<li>
 							<a class="" data-toggle="modal" href="#addBtnModal" >Add Post</a>
-
 						</li>
+
 					</ul>
 				</div>
 			</div>
@@ -53,13 +53,15 @@
 			</section>
 		</div>
 		<div class="span3">
-		<ul class="nav nav-list well well-small">
-			<li class="nav-header">Tags</li>
-			{{#each tags}}
-			<li><a href="/#/tags/{{slug}}">{{title}}</a></li>
-			{{/each}}
-		</ul>
-	</div>
+			<ul class="nav nav-list well well-small">
+				<li class="nav-header">
+					Tags
+				</li>
+				{{#each tags}}
+				<li><a href="/#/tags/{{slug}}">{{title}}</a></li>
+				{{/each}}
+			</ul>
+		</div>
 	</div>
 	<div class="modal fade hide" id="addBtnModal">
 	  <div class="modal-header">
@@ -92,10 +94,16 @@
 		          <div class="control-group">
 		            <label class="control-label">Tags:</label>
 		            <div class="controls">
+						<div class="input-append">
+	 					 	<input type="text" class="input-large" id="postTagsInput"/>
+							<button id="addTagBtn" class="btn" type="button">Add</button>
+						</div>
 		              <select multiple="multiple" id="postTags" class="input-block-level">
-		                <option>Option 1</option>
-		                <option>Option 2</option>
-		                <option>Option 3</option>
+						{{#if tags}}
+							{{#each tags}}
+								<option>{{this.title}}</option>
+							{{/each}}
+						{{/if}}
 		              </select>
 		            </div>
 		          </div>		           
@@ -106,8 +114,10 @@
 	    <button id="addBtn" class="btn btn-primary">Save</button>
 	  </div>
 	</div>
-</template>
+	
+	
 
+</template>
 
 <!-- @TODO: [Breadcrumb View] -->
 <template name="breadcrumbs">

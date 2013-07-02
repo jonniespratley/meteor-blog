@@ -10,12 +10,9 @@ Client = () ->
 	#Client-side router
 	Router = Backbone.Router.extend({
 		routes: 
-			"help" : "help"
 			"/" : "posts"
 			"posts/:id" : "detail"
 			"tags/:tag" : "tag"
-		help: () ->
-			console.log('Render help view')
 		posts: () ->
 			console.log('Render posts view')
 		detail: (id) ->
@@ -29,12 +26,16 @@ Client = () ->
 	#Meteor.subscribe('posts')
 	
 	# Views
+	
+	#This gets invoked whenever the template is created.
 	Template.blog.created = () ->
 		console.log('Template created', this)
 
+	#This gets invoked whenever the template is rendered.
 	Template.blog.rendered = () ->
 		console.log('Template rendered', this)
 	
+	#This gets invoked whenever the template is destroyed.
 	Template.blog.destroyed = () ->
 		console.log('Template destroyed', this)
 	
@@ -42,9 +43,10 @@ Client = () ->
 	Template.blog.posts = () ->
 		return Posts.find().fetch()
 		
+	#Inject the post into the template, this calls the findOne function on the Posts collection.
 	Template.blog.post = (id) ->
-		return Posts.find({_id: id}).fetch() if id
-
+		return Posts.findOne({_id: id}).fetch() if id
+		
 	#Inject tags into the menu template, this calls the fetch function on the Tags collection.
 	Template.blog.tags = () ->
 		return Tags.find().fetch()
@@ -55,7 +57,7 @@ Client = () ->
 	#Blog Events - Attach event listeners to the elements inside of the template and handle accordingly.
 	Template.blog.events({
 
-		#Handle adding a post
+		#Handle adding a post when the element is clicked.
 		'click #addBtn' : () ->
 			post  = 
 				title: $('#postTitle').val()
@@ -66,31 +68,40 @@ Client = () ->
 			Posts.insert(post)
 			console.log('Insert post', post)
 			
-			'click #addTagBtn' : () ->
-				el = $('#postTagsInput')
-				tag = 
-					slug: el.val().toLowerCase()
-					title: el.val()
-				el.val('')
-				Tags.insert(tag);
-				console.log('Insert tag', tag)
+		#Handle adding a tag when the element is clicked.
+		'click #addTagBtn' : () ->
+			el = $('#postTagsInput')
+			tag = 
+				slug: el.val()
+				title: el.val()
+			el.val('')
+			Tags.insert(tag);
+			console.log('Insert tag', tag)
+			
+			
+		#Handle removing a tag when the element is clicked.
+		'click #deleteTagBtn' : () ->
+			c = confirm('Are you sure you want to delete this?')
+			Tags.remove(this._id) if c
+			console.log('Delete this tag', this)
 	})
 	
 	#Post Events - Attach event listeners to the elements inside of the template and handle accordingly.
 	Template.post.events({
 		
-		#Handle removing a post
-		'click #deleteBtn' : () ->
+		#Handle removing a post when the element is clicked.
+		'click #deletePostBtn' : () ->
 			c = confirm('Are you sure you want to delete this?')
 			Posts.remove(this._id) if c
 			console.log('Delete this post', this)
 
-		#Handle editing a post
+		#Handle editing a post when the element is clicked.
 		'click #editBtn' : () ->
-			console.log('Edit this post', this)
 			editView = Meteor.render(() ->
-				return "Edit view #{@title}"
+				title = @title;
+				return "Edit view #{title}"
 			)
+			console.log('Edit this post', this)
 			$('#edit').html(editView).toggleClass('hidden')
 	})
 	

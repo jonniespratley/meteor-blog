@@ -53,70 +53,17 @@
 			</section>
 		</div>
 		<div class="span3">
-			<ul class="nav nav-list well well-small">
+			<ul id="tags-list" class="nav nav-list well well-small">
 				<li class="nav-header">
 					Tags
 				</li>
 				{{#each tags}}
-				<li><a href="/#/tags/{{slug}}">{{title}}</a></li>
+				<li><a class="tag-link" href="/#/tags/{{slug}}">{{title}}</a></li>
 				{{/each}}
 			</ul>
 		</div>
 	</div>
-	<div class="modal fade hide" id="addBtnModal">
-	  <div class="modal-header">
-	    <button type="button" class="close" data-dismiss="modal">×</button>
-	    <h3>Add Post</h3>
-	  </div>
-	  <div class="modal-body">
-	   	<form id="postForm" class="form-horizonta">
-		          <div class="control-group">
-		            <label class="control-label">Title:</label>
-		            <div class="controls">
-		              <input type="text" class="input-block-level input-medium" placeholder="Enter title here"
-		              id="postTitle"> 
-		            </div>
-		          </div>
-		          <div class="control-group">
-		            <label class="control-label">Body:</label>
-		            <div class="controls">
-		              <textarea class="input-block-level" rows="4" placeholder="Enter contents here"
-		              id="postBody"></textarea>
-		            </div>
-		          </div>
-		          <div class="control-group">
-		            <label class="control-label">Image:</label>
-		            <div class="controls">
-		              <input type="url" class="input-block-level input-medium" placeholder="http://placehold.it/100x100&amp;text=FeatureImage"
-		              id="postImage"> 
-		            </div>
-		          </div>
-		          <div class="control-group">
-		            <label class="control-label">Tags:</label>
-		            <div class="controls">
-						<div class="input-append">
-	 					 	<input type="text" class="input-large" id="postTagsInput"/>
-							<button id="addTagBtn" class="btn" type="button">Add</button>
-						</div>
-		              <select multiple="multiple" id="postTags" class="input-block-level">
-						{{#if tags}}
-							{{#each tags}}
-								<option>{{this.title}}</option>
-							{{/each}}
-						{{/if}}
-		              </select>
-		            </div>
-		          </div>		           
-		        </form>
-	  </div>
-	  <div class="modal-footer">
-	    <a href="#" class="btn" data-dismiss="modal">Close</a>
-	    <button id="addBtn" class="btn btn-primary">Save</button>
-	  </div>
-	</div>
-	
-	
-
+	{{>form}}
 </template>
 
 <!-- @TODO: [Breadcrumb View] -->
@@ -132,7 +79,7 @@
 
 <!-- @TODO: [Post Item View] -->
 <template name="post">
-	<div class="media" id="post-{{_id}}">
+	<div class="media post" id="post-{{_id}}">
 		<div class="actions pull-right">
 			<button id="editBtn" class="btn hidden btn-mini"><i class="icon-edit"></i></button>
 			<button id="deleteBtn" class="btn btn-danger btn-mini"><i class="icon-remove"></i></button>
@@ -140,10 +87,12 @@
 		<a class="pull-left" href="/#/posts/{{_id}}">
 			<img class="media-object" src="{{image}}">
 		</a>
-		<div class="media-body">
-			<h4 class="media-heading">{{title}}</h4>
-			<p>
+		<div class="post-body media-body">
+			<h4 class="post-heading media-heading">{{title}}</h4>
+			<p>	
 				{{body}}
+			</p>
+			<div class="post-meta">	
 				<br/>
 				<small>
 					{{#if tags}}
@@ -154,7 +103,7 @@
 						{{/each}}
 					{{/if}}
 				</small>
-			</p>
+			</div>
 		</div>
 	</div>
 </template>
@@ -168,31 +117,57 @@
 
 
 <!-- @TODO: [Post Edit View] -->
-<template name="edit">
-	<form id="postForm" class="form-horizontal">
-		<div class="control-group">
-			<label class="control-label" for="title">Title:</label>
-			<div class="controls">
-				<input class="input-xlarge focused" id="title" name="title" type="text" value="{{title}}"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="title">Image:</label>
-			<div class="controls">
-				<input class="input-xlarge focused" id="image" name="image" type="text" value="{{image}}"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="body">Body:</label>
-			<div class="controls">
-				<textarea id="body" class="input-xlarge" name="body" rows="8" cols="40">{{body}}</textarea>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="published">Published:</label>
-			<div class="controls">
-				<input class="input-xlarge focused" id="published" name="published" type="checkbox" value="{{published}}"/>
-			</div>
-		</div>
-	</form>
+<template name="form">
+	<div class="modal fade hide" id="addBtnModal">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal">×</button>
+	    <h3>Add Post</h3>
+	  </div>
+	  <div class="modal-body">
+	   	<form id="postForm" class="form-horizonta">
+          <div class="control-group">
+            <label class="control-label">Post Title:</label>
+            <div class="controls">
+              <input type="text" class="input-block-level input-medium" placeholder="Enter title here"
+              id="postTitle"> 
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Post Content:</label>
+            <div class="controls">
+              <textarea class="input-block-level" rows="4" placeholder="Enter contents here"
+              id="postBody"></textarea>
+				<span class="help-block">You can use Markdown</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Image:</label>
+            <div class="controls">
+              <input type="url" class="input-block-level input-medium" placeholder="http://placehold.it/100x100&amp;text=FeatureImage"
+              id="postImage"> 
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Tags:</label>
+            <div class="controls">
+				<div class="input-append">
+					 	<input type="text" class="input-large" id="postTagsInput"/>
+					<button id="addTagBtn" class="btn" type="button">Add</button>
+				</div>
+              <select multiple="multiple" id="postTags" class="input-block-level">
+				{{#if tags}}
+					{{#each tags}}
+						<option>{{this.title}}</option>
+					{{/each}}
+				{{/if}}
+              </select>
+            </div>
+          </div>		           
+        </form>
+	  </div>
+	  <div class="modal-footer">
+	    <a href="#" class="btn" data-dismiss="modal">Close</a>
+	    <button id="addBtn" class="btn btn-primary">Save</button>
+	  </div>
+	</div>
 </template>
